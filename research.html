@@ -1,0 +1,129 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GPU Tensor Train Research — Archana Pujahari</title><meta name="description" content="Research paper: fast and memory-efficient GPU Tensor Train decomposition via parallel TT-SVD (NISER)."><style>
+:root{--bg:#0b1220;--bg2:#111a2e;--card:#14203a;--tx:#e6edf7;--mu:#9fb0c9;--ac:#3b82f6;--cy:#22d3ee;--bd:#23334f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7fc;--bg2:#e9eff9;--card:#fff;--tx:#0f1b33;--mu:#44556f;--ac:#1d4ed8;--cy:#0e7490;--bd:#cbd7ea}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--cy)}h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;gap:1rem;align-items:center;padding:.6rem 1rem;overflow-x:auto;white-space:nowrap}
+nav b{color:var(--cy);margin-right:auto}nav a{color:var(--mu);text-decoration:none;font-size:.9rem}nav a:hover{color:var(--tx)}
+section{max-width:1040px;margin:auto;padding:4rem 1.2rem}
+.k{color:var(--cy);font:600 .8rem ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:8px;background:var(--ac);color:#fff;text-decoration:none;font-weight:600;border:1px solid var(--ac);cursor:pointer;font-size:.95rem}
+.btn.o{background:none;color:var(--tx);border-color:var(--bd)}.btn:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.2rem}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.mu{color:var(--mu)}.tag{display:inline-block;font:.75rem ui-monospace,monospace;border:1px solid var(--bd);border-radius:99px;padding:.1rem .6rem;margin:.15rem;color:var(--mu)}
+#hero{min-height:88vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;align-items:center}
+#hero h1{font-size:clamp(2.2rem,6vw,3.6rem);letter-spacing:.02em}
+.lead{font-size:1.15rem;color:var(--cy)}.row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.tl{border-left:2px solid var(--bd);padding-left:1.2rem}.tl div{position:relative;margin-bottom:1.4rem}.tl div:before{content:"";position:absolute;left:-1.62rem;top:.5rem;width:11px;height:11px;border-radius:50%;background:var(--cy)}
+.stat{font-size:2rem;font-weight:700;color:var(--cy)}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}.tabs button,.stg button{background:var(--card);color:var(--mu);border:1px solid var(--bd);border-radius:8px;padding:.45rem .8rem;cursor:pointer}
+.tabs button[aria-pressed=true],.stg button[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.stg{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.stg span{color:var(--mu)}
+svg text{fill:var(--tx);font:12px system-ui}svg .b{fill:var(--card);stroke:var(--cy)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:.5rem;border-bottom:1px solid var(--bd);text-align:left}td:last-child,th:last-child{color:var(--cy);font-weight:600}
+.wrap{overflow-x:auto}pre{background:#050a14;color:#cfe6ff;border:1px solid var(--bd);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.4rem 0;font-size:.85rem}
+.note{border-left:3px solid #f59e0b;background:rgba(245,158,11,.1);padding:.6rem .9rem;border-radius:6px;font-size:.9rem;margin:1rem 0}
+label{display:block;font-size:.85rem;color:var(--mu);margin:.5rem 0 .15rem}select,input[type=number]{width:100%;padding:.45rem;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px}input[type=range]{width:100%}
+.bar{height:22px;border-radius:5px;background:var(--ac);color:#fff;font-size:.8rem;padding:0 .5rem;line-height:22px;min-width:3rem;transition:width .3s}
+details{border:1px solid var(--bd);border-radius:8px;padding:.5rem .8rem;margin:.4rem 0}summary{cursor:pointer;font-weight:600}
+li{margin:.25rem 0}footer{text-align:center;color:var(--mu);padding:2rem;border-top:1px solid var(--bd)}
+#hero>*{position:relative;z-index:1}#hero>canvas{position:absolute;z-index:0}
+#hero h1,h2{background:linear-gradient(90deg,var(--tx),var(--cy) 60%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(34,211,238,.15)}
+.stg button{border-color:var(--sc,var(--bd))}.stg button[aria-pressed=true]{background:var(--sc,var(--ac));border-color:var(--sc,var(--ac))}
+.sw{display:flex;gap:.4rem;margin-left:.5rem}.sw button{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx);cursor:pointer;padding:0}
+.pot{transition:height 1s ease,y 1s ease}.stat{background:linear-gradient(90deg,var(--cy),#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ill{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(34,211,238,.12));border:1px solid var(--bd);border-radius:12px;padding:1rem;margin-top:1rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+.pc{position:relative;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.pc img,.pc svg.cv{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.pc .bd{padding:1rem 1.2rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.pc h3{margin:0;font-size:1.2rem}.pc h3 a{color:var(--tx);text-decoration:none}
+.pc h3 a::after{content:"";position:absolute;inset:0;z-index:1}
+.pc .go{margin-top:auto;color:var(--cy);font-weight:600}
+.pc:hover h3 a{color:var(--cy)}
+.fb{display:inline-block;background:linear-gradient(90deg,#f97316,#ec4899);color:#fff;font-weight:700;font-size:.75rem;border-radius:99px;padding:.15rem .7rem;align-self:flex-start}
+.pcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;margin-top:1.2rem}
+.pg{max-width:980px;margin:auto;padding:1.5rem 1.2rem 3rem}
+.dsec{padding:2.2rem 0 .4rem}.dsec>h2{font-size:clamp(1.4rem,3.4vw,1.9rem)}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.1rem;margin:.8rem 0}.sec h4{margin:0 0 .3rem;color:var(--cy)}.sec p{margin:0}
+.st{display:flex;gap:.8rem;align-items:flex-start;margin:.7rem 0}.st b.n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-size:.85rem;margin-top:.1rem}
+.hero2{width:100%;border-radius:12px;display:block;margin:.8rem 0 .3rem;border:1px solid var(--bd)}
+.ph{border:2px dashed var(--bd);border-radius:12px;padding:1.6rem 1rem;text-align:center;color:var(--mu);margin:.8rem 0;font-size:.9rem}
+.cap{font-size:.78rem;color:var(--mu);margin:.2rem 0 .8rem}
+.top{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.pn2{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:2rem;border-top:1px solid var(--bd);padding-top:1rem}
+ul.tl2{padding-left:1.1rem}
+
+.au{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;margin:.8rem 0}
+.au div{font-size:.9rem}.au b{display:block;font-size:1rem}
+.cmp{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.1rem;margin:.8rem 0}
+.rw{display:grid;grid-template-columns:90px 1fr;gap:.6rem;align-items:center;margin:.35rem 0;font-size:.88rem}
+.rw>span:first-child{color:var(--mu)}
+.tr{background:var(--bd);border-radius:6px;height:24px;overflow:hidden;position:relative}
+.fl{height:100%;border-radius:6px;display:flex;align-items:center;padding:0 .5rem;color:#fff;font:600 .78rem ui-monospace,monospace;white-space:nowrap;transition:width .5s;min-width:fit-content}
+.fl.us{background:linear-gradient(90deg,#10b981,#22d3ee);color:#04121f}
+.fl.ot{background:#64748b}.fl.na{background:repeating-linear-gradient(45deg,#64748b,#64748b 6px,#475569 6px,#475569 12px)}
+.tabs button{font-size:.9rem}
+.tb th,.tb td{white-space:nowrap}.tb td:last-child,.tb th:last-child{color:inherit;font-weight:inherit}
+.tb td.u{color:var(--cy);font-weight:700}
+@media(max-width:520px){.rw{grid-template-columns:1fr}}
+</style></head><body>
+<nav aria-label="Primary"><b>AP</b><a href="index.html">Home</a><a href="index.html#research">Research</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav>
+<main class="pg"><div class="top"><a class="btn o" href="index.html#research">← Back to Research</a></div>
+<div class="k">Research paper · NISER</div>
+<h1 style="font-size:clamp(1.7rem,4.6vw,2.6rem)">Fast and Memory-Efficient GPU Tensor Train Decomposition via Parallel TT-SVD</h1>
+<div><span class="tag">CUDA</span><span class="tag">GPU computing</span><span class="tag">Tensor Train</span><span class="tag">TT-SVD</span><span class="tag">Parallel SVD</span><span class="tag">Memory optimisation</span></div>
+<div class="au"><div><b>Archana Pujahari*</b>KMBB College of Engineering and Technology, Khordha, Odisha</div><div><b>Sagar Prakash Barad</b>National Institute of Science Education and Research (NISER), Bhubaneswar</div><div><b>Subhankar Mishra</b>National Institute of Science Education and Research (NISER), Bhubaneswar</div></div>
+<div class="cap">* This work was carried out while the author was an intern at NISER. Paper written in the ACM format.</div>
+<div class="g2" style="margin:1rem 0"><div class="card"><div class="stat">50×</div>speedup, up to, vs. existing libraries</div><div class="card"><div class="stat">2×</div>lower memory consumption</div><div class="card"><div class="stat">47–52%</div>less allocation time from memory reuse</div><div class="card"><div class="stat">~10⁻⁵</div>relative reconstruction error (2.2×10⁻⁵ to 3.1×10⁻⁵)</div></div>
+<div class="sec"><h4>The paper in one paragraph</h4><p>We present a lightweight, fully GPU-parallel implementation of Tensor Train SVD (TT-SVD), a way to compress huge multi-dimensional arrays into a chain of small ones. Every stage (unfolding, truncated SVD, core extraction) runs on the GPU. CUDA streams run many SVDs at once and a shape-aware memory manager removes costly allocations and data transfers. The result is up to 50× faster and 2× lower memory use, with no loss in reconstruction accuracy.</p></div>
+
+<div class="dsec"><div class="k">1 · Overview</div><h2>Research overview &amp; problem statement</h2><div class="sec"><h4>The problem</h4><p>High-dimensional tensors appear in computational physics, quantum chemistry, signal processing and deep learning. Their size grows exponentially with the number of dimensions, a problem known as the “curse of dimensionality”, so storing and computing with them directly quickly becomes infeasible. Tensor Train (TT) decomposition is a well-known fix: it keeps the storage growing linearly with the number of dimensions and has been used to compress neural network weights and speed up inference.</p></div>
+<div class="sec"><h4>The gap</h4><p>Existing libraries such as T3F and TensorLy support TT decomposition, but they are limited by CPU-bound computation or only partial GPU acceleration. Data keeps moving between CPU and GPU, and memory is allocated again and again.</p></div>
+<div class="sec"><h4>Goals</h4><ul class="tl2"><li>Run the whole TT-SVD pipeline on the GPU.</li><li>Cut runtime and peak memory against existing libraries.</li><li>Keep the same mathematical result: no loss in reconstruction accuracy.</li></ul></div>
+<div class="sec" style="border-color:var(--cy)"><h4>Three key innovations</h4><ul class="tl2"><li><b>Concurrent SVDs:</b> independent SVDs run across TT layers on CUDA streams.</li><li><b>Memory reuse:</b> shape-aware buffer pooling reuses GPU memory between steps.</li><li><b>Efficient kernels:</b> kernel-level tensor unfolding and contraction without explicit large copies.</li></ul></div></div>
+
+<div class="dsec"><div class="k">2 · Tools</div><h2>Tools &amp; technologies used</h2><div class="g2"><div class="sec"><h4>GPU programming</h4><p>CUDA, CUDA streams, cuBLAS and cuSOLVER (Jacobi / iterative solver)</p></div><div class="sec"><h4>Hardware</h4><p>NVIDIA A100 80GB GPU, 32-core Intel Xeon CPU</p></div><div class="sec"><h4>Baselines</h4><p>Tensorly, t3f, and a naive GPU TT-SVD written in PyTorch / CuPy</p></div><div class="sec"><h4>Measurement</h4><p>CUDA profiler for peak memory, total decomposition time, relative reconstruction error (RRE)</p></div></div></div>
+
+<div class="dsec"><div class="k">3 · Methodology</div><h2>Method: how the pipeline works</h2><div class="tabs" role="group" aria-label="Explanation level"><button aria-pressed="true" data-v="0">Plain language</button><button aria-pressed="false" data-v="1">Technical view</button></div><div class="sec" id="vx"></div>
+<img class="hero2" src="images/research-pipeline.jpg" alt="Parallel TT-SVD pipeline: input tensor, virtual unfolding, stream scheduler running concurrent cuSOLVER SVDs, core extraction and a shape-aware memory pool"><div class="cap">Figure 1 of the paper: virtual unfoldings and preallocated buffers feed concurrent per-unfolding SVD streams; small on-device matrix multiplications are reshaped into TT cores.</div>
+<h3 style="margin-top:1.4rem">Step by step</h3><div class="st"><b class="n">1</b><div><b>Virtual unfolding</b><br><span class="mu">Normally each step of TT-SVD reshapes (“unfolds”) the tensor into a big matrix, which copies a lot of data. Here the unfolding is an index remap, a view over the tensor already on the GPU. Blockwise kernels and index arithmetic feed matrix views straight to cuBLAS and cuSOLVER, so the full unfolded matrix is never built.</span></div></div><div class="st"><b class="n">2</b><div><b>Concurrent truncated SVDs</b><br><span class="mu">The SVDs are sent to several CUDA streams, each with its own cuSOLVER handle. Independent SVD work then overlaps and keeps the GPU busy. The scheduler gives more resources to the central unfoldings (near k ≈ d/2), which are usually the largest. The Jacobi / iterative solver is used for its numerical robustness on small and medium problems.</span></div></div><div class="st"><b class="n">3</b><div><b>Shape-aware memory pool</b><br><span class="mu">Device buffers are allocated once and reused, keyed by unfolding shape and data type. The residual is formed in place, so repeated allocations disappear and peak memory goes down.</span></div></div><div class="st"><b class="n">4</b><div><b>Core extraction</b><br><span class="mu">For each step, the truncated SVD gives a factor U. The next unfolding is reshaped, the residual W = U* · reshape(U) is computed with a small matrix multiply on the device, and the result is reshaped into TT core G. All of this stays on the GPU.</span></div></div><div class="st"><b class="n">5</b><div><b>Stability pathway</b><br><span class="mu">When the singular values are poorly separated, the method can use optional TSQR / orthonormalisation, or run the SVD in higher precision, to limit numerical drift.</span></div></div></div>
+
+<div class="dsec"><div class="k">4 · Results</div><h2>Key results &amp; insights</h2><div class="sec"><h4>Experimental setup</h4><p>Compared against Tensorly, t3f and a naive GPU implementation on an NVIDIA A100 80GB GPU with a 32-core Intel Xeon CPU. Tests used synthetic tensors of shape [100,100,100], [64,64,64,64] and [32⁶], and a real-world tensor from CIFAR-10 ([32,32,3,10]), with truncation threshold ε = 10⁻⁴. Reported: total runtime, peak memory (CUDA profiler) and RRE = ‖X − X̂‖<sub>F</sub> / ‖X‖<sub>F</sub>.</p></div>
+<h3 style="margin-top:1.2rem">Compare the methods</h3><p class="mu" style="margin:0">Pick a tensor shape. Bars use the values from Table 1. Time bars use a log scale, because Tensorly is so much slower.</p>
+<div class="tabs" id="shp" role="group" aria-label="Tensor shape"></div>
+<div class="cmp"><b>Decomposition time (ms, lower is better, log scale)</b><div id="bt"></div></div>
+<div class="cmp"><b>Peak memory (MB, lower is better)</b><div id="bm"></div></div>
+<div class="sec"><h4>Accuracy</h4><p id="ba"></p></div>
+<h3 style="margin-top:1.4rem">Full results table</h3><div class="wrap card"><table class="tb"><thead><tr><th rowspan="2">Tensor shape</th><th colspan="4">Time (ms)</th><th colspan="4">Memory (MB)</th><th colspan="4">RRE</th></tr><tr><th>Ours</th><th>Tensorly</th><th>t3f</th><th>Naive</th><th>Ours</th><th>Tensorly</th><th>t3f</th><th>Naive</th><th>Ours</th><th>Tensorly</th><th>t3f</th><th>Naive</th></tr></thead><tbody><tr><td>[100, 100, 100]</td><td class="u">14.6</td><td class="">932.1</td><td class="">53.8</td><td class="">87.4</td><td class="u">167.2</td><td class="">191.3</td><td class="">204.8</td><td class="">331.6</td><td class="u">3.1e-5</td><td class="">3.1e-5</td><td class="">3.1e-5</td><td class="">3.1e-5</td></tr><tr><td>[64, 64, 64, 64]</td><td class="u">28.9</td><td class="">1581.3</td><td class="">92.6</td><td class="">121.7</td><td class="u">218.5</td><td class="">292.7</td><td class="">243.9</td><td class="">374.1</td><td class="u">2.8e-5</td><td class="">2.8e-5</td><td class="">2.8e-5</td><td class="">2.8e-5</td></tr><tr><td>[32⁶]</td><td class="u">63.4</td><td class="">>3000</td><td class="">241.2</td><td class="">330.6</td><td class="u">327.4</td><td class="">—</td><td class="">361.5</td><td class="">480.2</td><td class="u">2.2e-5</td><td class="">—</td><td class="">2.2e-5</td><td class="">2.2e-5</td></tr></tbody></table></div><div class="cap">Table 1 of the paper. Tensorly did not finish the [32⁶] tensor within a reasonable time (more than 3000 ms), so memory and RRE are not available for it.</div>
+<div class="sec" style="border-color:var(--cy)"><h4>What the table shows</h4><ul class="tl2"><li>The method is the fastest and uses the least memory on every tested shape.</li><li>For the largest tensor ([32⁶]), Tensorly did not finish in a reasonable time, while this method finished in under 65 ms with little memory overhead.</li><li>Reconstruction error stays comparable to every other method, at about 10⁻⁵.</li></ul></div>
+<h3 style="margin-top:1.4rem">Ablation: memory gains</h3><p>The smart memory pool reduces allocation time by 47–52% over naive dynamic allocation.</p><div class="wrap card"><table class="tb"><thead><tr><th>Tensor shape</th><th>Dynamic alloc (ms)</th><th>Smart pool (ms)</th><th>Gain (%)</th></tr></thead><tbody><tr><td>[100, 100, 100]</td><td>8.2</td><td>4.3</td><td class="u">47.6</td></tr><tr><td>[64, 64, 64, 64]</td><td>13.5</td><td>7.1</td><td class="u">47.4</td></tr><tr><td>[32⁶]</td><td>26.3</td><td>12.5</td><td class="u">52.5</td></tr></tbody></table></div><div class="cap">Table 2 of the paper: allocation time with and without the shape-aware memory pool.</div>
+<h3 style="margin-top:1.4rem">Complexity</h3><div class="sec"><p>For a tensor with d dimensions of size n and TT-rank r, each SVD works on an (n·r) × (n·r) matrix and costs O(n²r³). With d − 1 such operations the total is <b>O(d·n²·r³)</b>, far more tractable than the naive <b>O(nᵈ)</b>.</p></div></div>
+
+<div class="dsec"><div class="k">5 · Conclusion</div><h2>Conclusion &amp; impact</h2><div class="sec"><h4>Conclusion</h4><p>A lightweight but high-performance GPU implementation of TT-SVD that uses CUDA streams for parallel SVD execution, efficient mode-wise unfolding and memory pooling to cut allocation overhead. In practice it delivers up to 50× speedup and about half the memory footprint of standard libraries like Tensorly and t3f, with no loss in reconstruction accuracy.</p></div>
+<div class="sec"><h4>Why it matters</h4><ul class="tl2"><li>Large tensors are everywhere in modern machine learning and scientific computing, so efficiency is critical.</li><li>Faster, smaller decompositions make large models and simulations cheaper to run.</li><li>The authors hope it can serve as a practical drop-in solution for scalable tensor decomposition in real-world GPU workflows.</li></ul></div>
+<div class="sec"><h4>Keywords</h4><p>Tensor Train Decomposition, TT-SVD, GPU Acceleration, CUDA, High-Dimensional Tensors, Parallel SVD, Memory Optimization, Tensor Compression</p></div></div>
+<div class="sec"><h4>Cite this paper</h4><p>Archana Pujahari, Sagar Prakash Barad, and Subhankar Mishra. 2025. Fast and Memory-Efficient GPU Tensor Train Decomposition via Parallel TT-SVD.</p></div>
+<div class="row" style="margin-top:1.5rem"><a class="btn o" href="index.html#research">← Back to Research</a><a class="btn o" href="index.html#projects">View my projects</a></div></main>
+<footer>© Archana Pujahari</footer><script>
+const $=s=>document.querySelector(s);
+const V=['A tensor is just a many-dimensional table of numbers, and it gets enormous very quickly. Tensor Train (TT) decomposition squeezes it into a chain of small blocks that together can rebuild the original almost exactly. Doing this on a CPU, or moving data back and forth to a GPU, is slow and wastes memory. This work does every step inside the GPU, runs many small jobs at the same time, and reuses memory instead of asking for new memory each time. That is why it is up to 50× faster and uses half the memory.','TT-SVD factorises a d-way tensor into 3-way cores by sequential reshaping and truncated SVD: reshape, truncated SVD, reshape U into the next unfolding, propagate the residual Σ<sub>k</sub>V<sub>k</sub><sup>T</sup>. Here unfoldings are virtual (an index remap over the device tensor), truncated SVDs run concurrently on multiple CUDA streams with their own cuSOLVER handles (Jacobi solver), the residual W<sub>k</sub> = U<sub>k</sub>*·reshape(U<sub>k+1</sub>) is a small on-device GEMM, and a shape-aware pool preallocates and reuses buffers keyed by unfolding shape and dtype. Optional TSQR / orthonormalisation or higher-precision SVD handles poorly separated spectra.'];
+document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#vx').innerHTML='<p style="margin:0">'+V[b.dataset.v]+'</p>'});$('#vx').innerHTML='<p style="margin:0">'+V[0]+'</p>';
+const M=['Ours','Tensorly','t3f','Naive'];
+const D=[{n:'[100, 100, 100]',t:[14.6,932.1,53.8,87.4],m:[167.2,191.3,204.8,331.6],r:['3.1e-5','3.1e-5','3.1e-5','3.1e-5']},
+{n:'[64, 64, 64, 64]',t:[28.9,1581.3,92.6,121.7],m:[218.5,292.7,243.9,374.1],r:['2.8e-5','2.8e-5','2.8e-5','2.8e-5']},
+{n:'[32⁶]',t:[63.4,null,241.2,330.6],m:[327.4,null,361.5,480.2],r:['2.2e-5',null,'2.2e-5','2.2e-5']}];
+function show(i){const d=D[i];document.querySelectorAll('#shp button').forEach((b,j)=>b.setAttribute('aria-pressed',j==i));
+ const row=(l,w,txt,c)=>`<div class="rw"><span>${l}</span><div class="tr"><div class="fl ${c}" style="width:${w}%">${txt}</div></div></div>`;
+ const L=v=>Math.log10(v);const lo=0.5,hi=L(3200);
+ $('#bt').innerHTML=d.t.map((v,j)=>v===null?row(M[j],100,'&gt; 3000 ms (did not finish)','na'):row(M[j],Math.max(14,(L(v)-lo)/(hi-lo)*100),v+' ms',j==0?'us':'ot')).join('');
+ const mx=Math.max(...d.m.filter(Boolean));
+ $('#bm').innerHTML=d.m.map((v,j)=>v===null?row(M[j],100,'not available','na'):row(M[j],Math.max(14,v/mx*100),v+' MB',j==0?'us':'ot')).join('');
+ $('#ba').innerHTML='Relative reconstruction error: '+d.r.map((v,j)=>M[j]+' <b>'+(v||'n/a')+'</b>').join(' · ')+'. Accuracy is the same across all methods that finished.'}
+D.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d.n;b.onclick=()=>show(i);$('#shp').append(b)});show(0);
+</script></body></html>

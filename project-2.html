@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>House Price Prediction — Archana Pujahari</title><meta name="description" content="Predicts house prices from 80+ property features using regression models, with an R² of 0.89 on test data."><style>
+:root{--bg:#0b1220;--bg2:#111a2e;--card:#14203a;--tx:#e6edf7;--mu:#9fb0c9;--ac:#3b82f6;--cy:#22d3ee;--bd:#23334f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7fc;--bg2:#e9eff9;--card:#fff;--tx:#0f1b33;--mu:#44556f;--ac:#1d4ed8;--cy:#0e7490;--bd:#cbd7ea}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--cy)}h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;gap:1rem;align-items:center;padding:.6rem 1rem;overflow-x:auto;white-space:nowrap}
+nav b{color:var(--cy);margin-right:auto}nav a{color:var(--mu);text-decoration:none;font-size:.9rem}nav a:hover{color:var(--tx)}
+section{max-width:1040px;margin:auto;padding:4rem 1.2rem}
+.k{color:var(--cy);font:600 .8rem ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:8px;background:var(--ac);color:#fff;text-decoration:none;font-weight:600;border:1px solid var(--ac);cursor:pointer;font-size:.95rem}
+.btn.o{background:none;color:var(--tx);border-color:var(--bd)}.btn:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.2rem}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.mu{color:var(--mu)}.tag{display:inline-block;font:.75rem ui-monospace,monospace;border:1px solid var(--bd);border-radius:99px;padding:.1rem .6rem;margin:.15rem;color:var(--mu)}
+#hero{min-height:88vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;align-items:center}
+#hero h1{font-size:clamp(2.2rem,6vw,3.6rem);letter-spacing:.02em}
+.lead{font-size:1.15rem;color:var(--cy)}.row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.tl{border-left:2px solid var(--bd);padding-left:1.2rem}.tl div{position:relative;margin-bottom:1.4rem}.tl div:before{content:"";position:absolute;left:-1.62rem;top:.5rem;width:11px;height:11px;border-radius:50%;background:var(--cy)}
+.stat{font-size:2rem;font-weight:700;color:var(--cy)}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}.tabs button,.stg button{background:var(--card);color:var(--mu);border:1px solid var(--bd);border-radius:8px;padding:.45rem .8rem;cursor:pointer}
+.tabs button[aria-pressed=true],.stg button[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.stg{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.stg span{color:var(--mu)}
+svg text{fill:var(--tx);font:12px system-ui}svg .b{fill:var(--card);stroke:var(--cy)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:.5rem;border-bottom:1px solid var(--bd);text-align:left}td:last-child,th:last-child{color:var(--cy);font-weight:600}
+.wrap{overflow-x:auto}pre{background:#050a14;color:#cfe6ff;border:1px solid var(--bd);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.4rem 0;font-size:.85rem}
+.note{border-left:3px solid #f59e0b;background:rgba(245,158,11,.1);padding:.6rem .9rem;border-radius:6px;font-size:.9rem;margin:1rem 0}
+label{display:block;font-size:.85rem;color:var(--mu);margin:.5rem 0 .15rem}select,input[type=number]{width:100%;padding:.45rem;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px}input[type=range]{width:100%}
+.bar{height:22px;border-radius:5px;background:var(--ac);color:#fff;font-size:.8rem;padding:0 .5rem;line-height:22px;min-width:3rem;transition:width .3s}
+details{border:1px solid var(--bd);border-radius:8px;padding:.5rem .8rem;margin:.4rem 0}summary{cursor:pointer;font-weight:600}
+li{margin:.25rem 0}footer{text-align:center;color:var(--mu);padding:2rem;border-top:1px solid var(--bd)}
+#hero>*{position:relative;z-index:1}#hero>canvas{position:absolute;z-index:0}
+#hero h1,h2{background:linear-gradient(90deg,var(--tx),var(--cy) 60%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(34,211,238,.15)}
+.stg button{border-color:var(--sc,var(--bd))}.stg button[aria-pressed=true]{background:var(--sc,var(--ac));border-color:var(--sc,var(--ac))}
+.sw{display:flex;gap:.4rem;margin-left:.5rem}.sw button{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx);cursor:pointer;padding:0}
+.pot{transition:height 1s ease,y 1s ease}.stat{background:linear-gradient(90deg,var(--cy),#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ill{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(34,211,238,.12));border:1px solid var(--bd);border-radius:12px;padding:1rem;margin-top:1rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+.pc{position:relative;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.pc img,.pc svg.cv{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.pc .bd{padding:1rem 1.2rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.pc h3{margin:0;font-size:1.2rem}.pc h3 a{color:var(--tx);text-decoration:none}
+.pc h3 a::after{content:"";position:absolute;inset:0;z-index:1}
+.pc .go{margin-top:auto;color:var(--cy);font-weight:600}
+.pc:hover h3 a{color:var(--cy)}
+.fb{display:inline-block;background:linear-gradient(90deg,#f97316,#ec4899);color:#fff;font-weight:700;font-size:.75rem;border-radius:99px;padding:.15rem .7rem;align-self:flex-start}
+.pcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;margin-top:1.2rem}
+.pg{max-width:980px;margin:auto;padding:1.5rem 1.2rem 3rem}
+.dsec{padding:2.2rem 0 .4rem}.dsec>h2{font-size:clamp(1.4rem,3.4vw,1.9rem)}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.1rem;margin:.8rem 0}.sec h4{margin:0 0 .3rem;color:var(--cy)}.sec p{margin:0}
+.st{display:flex;gap:.8rem;align-items:flex-start;margin:.7rem 0}.st b.n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-size:.85rem;margin-top:.1rem}
+.hero2{width:100%;border-radius:12px;display:block;margin:.8rem 0 .3rem;border:1px solid var(--bd)}
+.ph{border:2px dashed var(--bd);border-radius:12px;padding:1.6rem 1rem;text-align:center;color:var(--mu);margin:.8rem 0;font-size:.9rem}
+.cap{font-size:.78rem;color:var(--mu);margin:.2rem 0 .8rem}
+.top{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.pn2{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:2rem;border-top:1px solid var(--bd);padding-top:1rem}
+ul.tl2{padding-left:1.1rem}
+</style></head><body>
+<nav aria-label="Primary"><b>AP</b><a href="index.html">Home</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav>
+<main class="pg"><div class="top"><a class="btn o" href="index.html#projects">← Back to Projects</a></div><div class="k">Project 1 of 4 · data science</div><h1 style="font-size:clamp(1.8rem,5vw,2.8rem)">House Price Prediction</h1><div><span class="tag">Python</span><span class="tag">Scikit-learn</span><span class="tag">Pandas</span><span class="tag">Seaborn</span><span class="tag">Jupyter</span></div>
+<img class="hero2" src="images/house-1.jpg" alt="Cover graphic for House Price Prediction"><div class="cap">Project cover graphic. Figures shown inside the graphic are illustrative.</div>
+<div class="dsec"><div class="k">1 · Overview</div><h2>Project overview &amp; problem statement</h2><div class="sec"><h4>The problem</h4><p>Pricing a house by gut feeling is unreliable because dozens of factors, such as location, size and age, all interact. This project builds a model that estimates a fair price from the property’s features.</p></div><div class="sec"><h4>Main goals</h4><ul class="tl2"><li>Predict house prices from 80+ property features.</li><li>Compare a simple model against more advanced ones to see if the extra complexity pays off.</li><li>Find out which features drive the price the most.</li></ul></div></div>
+<div class="dsec"><div class="k">2 · Tools</div><h2>Tools &amp; technologies used</h2><div class="sec"><h4>Language</h4><p>Python</p></div><div class="sec"><h4>Data handling</h4><p>Pandas</p></div><div class="sec"><h4>Machine learning</h4><p>Scikit-learn: Linear Regression, Ridge Regression, Random Forest Regressor</p></div><div class="sec"><h4>Visualisation</h4><p>Seaborn (correlation and residual plots)</p></div><div class="sec"><h4>Environment</h4><p>Jupyter Notebook</p></div></div>
+<div class="dsec"><div class="k">3 · Methodology</div><h2>Data, process &amp; methodology</h2><div class="st"><b class="n">1</b><div><b>Understand the data</b><br><span class="mu">Reviewed the dataset of 80+ property features and checked types, ranges and missing values.</span></div></div><div class="st"><b class="n">2</b><div><b>Clean the data</b><br><span class="mu">Removed outliers, since a few extreme records can distort what the model learns.</span></div></div><div class="st"><b class="n">3</b><div><b>Transform the data</b><br><span class="mu">Applied log transforms to skewed values such as price so very expensive houses do not dominate training.</span></div></div><div class="st"><b class="n">4</b><div><b>Encode categories</b><br><span class="mu">Converted text categories into numbers with label encoding so the models can use them.</span></div></div><div class="st"><b class="n">5</b><div><b>Explore relationships</b><br><span class="mu">Plotted correlations in Seaborn to see which features move together with price.</span></div></div><div class="st"><b class="n">6</b><div><b>Train the models</b><br><span class="mu">Trained Linear, Ridge and Random Forest regressors on a training split.</span></div></div><div class="st"><b class="n">7</b><div><b>Evaluate</b><br><span class="mu">Tested on houses the models had never seen, and used residual plots to check that errors followed no pattern.</span></div></div><img class="hero2" src="images/house-2.jpg" alt="Workflow graphic for House Price Prediction"><div class="cap">Workflow graphic. Figures shown inside the graphic are illustrative.</div></div>
+<div class="dsec"><div class="k">4 · Results</div><h2>Key features, insights &amp; results</h2><div class="g2"><div class="card"><div class="stat">0.89</div>R² on the test set</div><div class="card"><div class="stat">18%</div>improvement in accuracy</div><div class="card"><div class="stat">80+</div>property features used</div></div><div class="sec"><h4>Findings</h4><ul class="tl2"><li>Location, area and age of the property were the key drivers of price.</li><li>Ridge regularisation keeps the model stable when many features overlap.</li><li>Random Forest can capture non-linear effects, for example large houses in good locations costing disproportionately more.</li></ul></div><div class="ph">Visual placeholder: add your own notebook plot or dashboard screenshot here (save it in the images folder).</div></div>
+<div class="dsec"><div class="k">5 · Conclusion</div><h2>Conclusion &amp; business impact</h2><div class="sec"><h4>Conclusion</h4><p>The project shows that a cleaned, well-prepared dataset and a model comparison give a reliable, explainable price estimate rather than a guess.</p></div><div class="sec"><h4>Actionable takeaways</h4><ul class="tl2"><li>An R² of 0.89 means the model explains about 89% of the variation in prices on unseen data.</li><li>Knowing the main price drivers helps buyers, sellers and agents focus on what really moves value.</li><li>Data cleaning and feature handling mattered as much as the choice of model.</li></ul></div></div>
+<div class="row" style="margin-top:1.5rem"><a class="btn" href="https://github.com/archanapujahari26" target="_blank" rel="noopener">View on GitHub</a><a class="btn o" href="index.html#projects">← Back to Projects</a></div><div class="pn2"><a href="project-1.html">← Annapurna AI — Hostel &amp; PG Mess Waste &amp; Cost Optimizer</a><a href="project-3.html">Customer Churn Prediction →</a></div></main>
+<footer>© Archana Pujahari</footer>
+<script></script></body></html>

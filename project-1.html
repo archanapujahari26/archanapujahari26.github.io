@@ -1,0 +1,151 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Annapurna AI — Hostel &amp; PG Mess Waste &amp; Cost Optimizer — Archana Pujahari</title><meta name="description" content="An end-to-end data science and machine learning system that tells a hostel cook how much food to cook, so less food is wasted."><style>
+:root{--bg:#0b1220;--bg2:#111a2e;--card:#14203a;--tx:#e6edf7;--mu:#9fb0c9;--ac:#3b82f6;--cy:#22d3ee;--bd:#23334f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f7fc;--bg2:#e9eff9;--card:#fff;--tx:#0f1b33;--mu:#44556f;--ac:#1d4ed8;--cy:#0e7490;--bd:#cbd7ea}}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--cy)}h1,h2,h3{line-height:1.2;margin:0 0 .5em}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg2);border-bottom:1px solid var(--bd);display:flex;gap:1rem;align-items:center;padding:.6rem 1rem;overflow-x:auto;white-space:nowrap}
+nav b{color:var(--cy);margin-right:auto}nav a{color:var(--mu);text-decoration:none;font-size:.9rem}nav a:hover{color:var(--tx)}
+section{max-width:1040px;margin:auto;padding:4rem 1.2rem}
+.k{color:var(--cy);font:600 .8rem ui-monospace,Menlo,monospace;letter-spacing:.12em;text-transform:uppercase}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:8px;background:var(--ac);color:#fff;text-decoration:none;font-weight:600;border:1px solid var(--ac);cursor:pointer;font-size:.95rem}
+.btn.o{background:none;color:var(--tx);border-color:var(--bd)}.btn:focus-visible,button:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--cy);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1.2rem}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.mu{color:var(--mu)}.tag{display:inline-block;font:.75rem ui-monospace,monospace;border:1px solid var(--bd);border-radius:99px;padding:.1rem .6rem;margin:.15rem;color:var(--mu)}
+#hero{min-height:88vh;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;align-items:center}
+#hero h1{font-size:clamp(2.2rem,6vw,3.6rem);letter-spacing:.02em}
+.lead{font-size:1.15rem;color:var(--cy)}.row{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+.tl{border-left:2px solid var(--bd);padding-left:1.2rem}.tl div{position:relative;margin-bottom:1.4rem}.tl div:before{content:"";position:absolute;left:-1.62rem;top:.5rem;width:11px;height:11px;border-radius:50%;background:var(--cy)}
+.stat{font-size:2rem;font-weight:700;color:var(--cy)}
+.tabs{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}.tabs button,.stg button{background:var(--card);color:var(--mu);border:1px solid var(--bd);border-radius:8px;padding:.45rem .8rem;cursor:pointer}
+.tabs button[aria-pressed=true],.stg button[aria-pressed=true]{background:var(--ac);color:#fff;border-color:var(--ac)}
+.stg{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}.stg span{color:var(--mu)}
+svg text{fill:var(--tx);font:12px system-ui}svg .b{fill:var(--card);stroke:var(--cy)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}th,td{padding:.5rem;border-bottom:1px solid var(--bd);text-align:left}td:last-child,th:last-child{color:var(--cy);font-weight:600}
+.wrap{overflow-x:auto}pre{background:#050a14;color:#cfe6ff;border:1px solid var(--bd);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.4rem 0;font-size:.85rem}
+.note{border-left:3px solid #f59e0b;background:rgba(245,158,11,.1);padding:.6rem .9rem;border-radius:6px;font-size:.9rem;margin:1rem 0}
+label{display:block;font-size:.85rem;color:var(--mu);margin:.5rem 0 .15rem}select,input[type=number]{width:100%;padding:.45rem;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px}input[type=range]{width:100%}
+.bar{height:22px;border-radius:5px;background:var(--ac);color:#fff;font-size:.8rem;padding:0 .5rem;line-height:22px;min-width:3rem;transition:width .3s}
+details{border:1px solid var(--bd);border-radius:8px;padding:.5rem .8rem;margin:.4rem 0}summary{cursor:pointer;font-weight:600}
+li{margin:.25rem 0}footer{text-align:center;color:var(--mu);padding:2rem;border-top:1px solid var(--bd)}
+#hero>*{position:relative;z-index:1}#hero>canvas{position:absolute;z-index:0}
+#hero h1,h2{background:linear-gradient(90deg,var(--tx),var(--cy) 60%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card{transition:transform .2s,box-shadow .2s}.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(34,211,238,.15)}
+.stg button{border-color:var(--sc,var(--bd))}.stg button[aria-pressed=true]{background:var(--sc,var(--ac));border-color:var(--sc,var(--ac))}
+.sw{display:flex;gap:.4rem;margin-left:.5rem}.sw button{width:20px;height:20px;border-radius:50%;border:2px solid var(--tx);cursor:pointer;padding:0}
+.pot{transition:height 1s ease,y 1s ease}.stat{background:linear-gradient(90deg,var(--cy),#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ill{display:flex;gap:1rem;flex-wrap:wrap;align-items:center;background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(34,211,238,.12));border:1px solid var(--bd);border-radius:12px;padding:1rem;margin-top:1rem}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+.pc{position:relative;display:flex;flex-direction:column;padding:0;overflow:hidden}
+.pc img,.pc svg.cv{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.pc .bd{padding:1rem 1.2rem 1.2rem;display:flex;flex-direction:column;gap:.4rem;flex:1}
+.pc h3{margin:0;font-size:1.2rem}.pc h3 a{color:var(--tx);text-decoration:none}
+.pc h3 a::after{content:"";position:absolute;inset:0;z-index:1}
+.pc .go{margin-top:auto;color:var(--cy);font-weight:600}
+.pc:hover h3 a{color:var(--cy)}
+.fb{display:inline-block;background:linear-gradient(90deg,#f97316,#ec4899);color:#fff;font-weight:700;font-size:.75rem;border-radius:99px;padding:.15rem .7rem;align-self:flex-start}
+.pcs{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.2rem;margin-top:1.2rem}
+.pg{max-width:980px;margin:auto;padding:1.5rem 1.2rem 3rem}
+.dsec{padding:2.2rem 0 .4rem}.dsec>h2{font-size:clamp(1.4rem,3.4vw,1.9rem)}
+.sec{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:1rem 1.1rem;margin:.8rem 0}.sec h4{margin:0 0 .3rem;color:var(--cy)}.sec p{margin:0}
+.st{display:flex;gap:.8rem;align-items:flex-start;margin:.7rem 0}.st b.n{flex:none;width:30px;height:30px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-size:.85rem;margin-top:.1rem}
+.hero2{width:100%;border-radius:12px;display:block;margin:.8rem 0 .3rem;border:1px solid var(--bd)}
+.ph{border:2px dashed var(--bd);border-radius:12px;padding:1.6rem 1rem;text-align:center;color:var(--mu);margin:.8rem 0;font-size:.9rem}
+.cap{font-size:.78rem;color:var(--mu);margin:.2rem 0 .8rem}
+.top{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.pn2{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:2rem;border-top:1px solid var(--bd);padding-top:1rem}
+ul.tl2{padding-left:1.1rem}
+</style></head><body>
+<nav aria-label="Primary"><b>AP</b><a href="index.html">Home</a><a href="index.html#projects">Projects</a><a href="index.html#contact">Contact</a></nav>
+<main class="pg"><div class="top"><a class="btn o" href="index.html#projects">← Back to Projects</a></div><div class="k">Case study · data science &amp; machine learning</div>
+<h1 style="font-size:clamp(1.8rem,5vw,2.8rem)">🍛 Annapurna AI — Hostel &amp; PG Mess Waste &amp; Cost Optimizer</h1><p class="mu">A complete end-to-end data science and machine learning system for institutional kitchens.</p><div><span class="tag">Python</span><span class="tag">Node.js</span><span class="tag">Machine Learning</span><span class="tag">JavaScript</span><span class="tag">Data Science</span></div>
+<img class="hero2" src="images/annapurna-1.jpg" alt="Cover graphic for Annapurna AI"><div class="cap">Project cover graphic. Figures shown inside the graphic are illustrative; the project's own simulated benchmark is in section 4.</div>
+<div class="dsec"><div class="k">1 · Overview</div><h2>Project overview &amp; problem statement</h2><div class="ill"><svg viewBox="0 0 300 150" width="300" style="max-width:100%" role="img" aria-label="Two cooking pots: the traditional pot leaves more food wasted than the Annapurna AI pot"><g id="pots"></g></svg><div><b>Hover or tap a pot</b><p id="pt" class="mu" style="margin:.3rem 0 0">Compare leftover food: traditional rule of thumb vs Annapurna AI (simulated benchmark).</p></div></div>
+<div class="g2" style="margin-top:1rem">
+<div class="card"><h3>The problem</h3><p>A mess cook must balance two risks: too little food causes complaints and emergency cooking; too much creates cost and waste. Cooks usually rely on experience and a fixed safety margin, but attendance shifts with exams, weekends, festivals, rain, food-delivery habits and the academic calendar.</p>
+<details><summary>Technical framing</summary>This is a stochastic inventory (newsvendor) problem: shortage and surplus have unequal costs, so the best quantity is a quantile of predicted demand rather than its mean.</details></div>
+<div class="card"><h3>Unique approach</h3><ol style="padding-left:1.1rem"><li><b>Hyper-local context:</b> exams, weekends, weather and festivals.</li><li><b>ML forecasting:</b> predicts attendance and dish consumption, not fixed quantities.</li><li><b>Operational simplicity:</b> simple weighing and logging workflow for cooks and managers.</li></ol></div></div>
+
+<div class="card" style="margin-top:1.2rem;background:linear-gradient(135deg,rgba(249,115,22,.2),rgba(34,211,238,.15),rgba(139,92,246,.18))"><div class="k">In simple words</div><p style="font-size:1.1rem;margin:.3rem 0"><b>Annapurna AI tells a hostel cook exactly how much food to cook, so less food is wasted and nobody goes hungry.</b> It is my own project.</p>
+<div class="g2" style="margin:.8rem 0"><div class="card" style="border-top:4px solid #3b82f6;text-align:center"><div style="font-size:2.4rem">🔮</div><b>1. Predict</b><br><span class="mu">How many students will eat, using exams, weather and festivals</span></div><div class="card" style="border-top:4px solid #f97316;text-align:center"><div style="font-size:2.4rem">🍲</div><b>2. Cook the right amount</b><br><span class="mu">A simple sheet tells the cook the exact kilograms</span></div><div class="card" style="border-top:4px solid #10b981;text-align:center"><div style="font-size:2.4rem">⚖️</div><b>3. Weigh and learn</b><br><span class="mu">Leftovers are logged so tomorrow’s plan gets better</span></div></div>
+<svg viewBox="0 0 600 190" width="100%" role="img" aria-label="Colourful illustration of a mess kitchen with a steaming pot, a plate of food and a weighing scale"><defs><linearGradient id="wl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fde68a"/><stop offset="1" stop-color="#fdba74"/></linearGradient></defs><rect width="600" height="190" rx="12" fill="url(#wl)"/><rect y="140" width="600" height="50" fill="#92400e"/><rect x="40" y="20" width="110" height="50" rx="6" fill="#fff" opacity=".55"/><circle cx="95" cy="45" r="16" fill="#22d3ee"/><rect x="60" y="95" width="150" height="50" rx="10" fill="#dc2626"/><rect x="50" y="105" width="15" height="10" rx="4" fill="#7f1d1d"/><rect x="205" y="105" width="15" height="10" rx="4" fill="#7f1d1d"/><ellipse cx="135" cy="95" rx="75" ry="8" fill="#facc15"/><g stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"><path d="M105 85c-10-15 10-25 0-40"><animate attributeName="opacity" values="0;.8;0" dur="2.4s" repeatCount="indefinite"/></path><path d="M135 85c-10-15 10-25 0-40"><animate attributeName="opacity" values="0;.8;0" dur="2s" repeatCount="indefinite"/></path><path d="M165 85c-10-15 10-25 0-40"><animate attributeName="opacity" values="0;.8;0" dur="2.8s" repeatCount="indefinite"/></path></g><circle cx="330" cy="125" r="50" fill="#fff" stroke="#cbd5e1" stroke-width="4"/><path d="M330 125l-40-30a50 50 0 0 1 60-8z" fill="#fef3c7"/><path d="M330 125l22-45a50 50 0 0 1 28 40z" fill="#eab308"/><path d="M330 125l50 0a50 50 0 0 1-30 45z" fill="#16a34a"/><path d="M330 125l20 48a50 50 0 0 1-60-8z" fill="#ef4444"/><circle cx="330" cy="125" r="10" fill="#fff"/><rect x="430" y="100" width="140" height="45" rx="8" fill="#1e293b"/><rect x="440" y="108" width="120" height="22" rx="4" fill="#052e16"/><text id="scl" x="500" y="125" text-anchor="middle" style="fill:#4ade80;font:700 15px ui-monospace,monospace">0.0 kg</text><text x="500" y="90" text-anchor="middle" style="fill:#1e293b;font-weight:700">⚖️ Weigh</text><rect x="20" y="150" width="290" height="30" rx="15" fill="#0f172a" opacity=".85"/><circle cx="38" cy="165" r="6" fill="#ef4444"><animate attributeName="opacity" values="1;.2;1" dur="1.2s" repeatCount="indefinite"/></circle><text id="clk" x="52" y="170" style="fill:#fff;font:700 13px ui-monospace,monospace">LIVE</text></svg>
+<div class="g2" style="margin-top:.8rem"><div class="card" style="text-align:center"><div class="stat" id="lm">0</div>meals planned</div><div class="card" style="text-align:center"><div class="stat" id="lk">0.0</div>kg food saved</div><div class="card" style="text-align:center"><div class="stat" id="lr">₹0</div>cost saved</div></div><div class="mu" style="font-size:.85rem;margin-top:.5rem">Live counter is a simulated demo for explanation (assumes ₹40 per kg). It is not real kitchen data.</div></div>
+<div class="sec"><h4>Main goals</h4><ul class="tl2"><li>Forecast attendance and dish consumption instead of using fixed quantities.</li><li>Recommend a food quantity that balances shortage risk against waste.</li><li>Give cooks and managers a simple weigh-and-log routine so the system keeps learning.</li></ul></div></div>
+<div class="dsec"><div class="k">2 · Tools</div><h2>Tools &amp; technologies used</h2><div class="g2"><div class="sec"><h4>Languages</h4><p>Python, JavaScript</p></div><div class="sec"><h4>Runtime &amp; server</h4><p>Node.js (dashboard server, data generation and model training scripts)</p></div><div class="sec"><h4>Data science &amp; ML</h4><p>Demand forecasting, feature engineering, quantile-based cost optimisation</p></div><div class="sec"><h4>Environment</h4><p>Jupyter Notebook for EDA and models; HTML, CSS and JavaScript dashboard</p></div></div><h3 style="margin-top:1.6rem">Project structure</h3>
+<div id="tree"></div>
+</div>
+<div class="dsec"><div class="k">3 · Methodology</div><h2>Data, process &amp; methodology</h2><img class="hero2" src="images/annapurna-2.jpg" alt="Annapurna AI workflow graphic"><div class="cap">Workflow graphic. Figures shown inside the graphic are illustrative.</div><h3 style="margin-top:1.6rem">Machine learning architecture</h3>
+<div class="stg" role="group" aria-label="Pipeline stages"></div>
+<div class="card" id="stx" style="margin-top:.6rem"></div>
+<p class="mu" style="font-size:.9rem;margin-top:.6rem"><code>Q* = N_hat × c_hat + z × sigma</code> · N_hat = expected students, c_hat = expected serving per student, sigma = forecast uncertainty, z = safety multiplier set by the chosen quantile (70–95%).</p>
+
+<h3 style="margin-top:1.6rem">A day in the mess</h3>
+<div class="card"><div class="tabs" id="sc" role="group" aria-label="Choose a day type"></div><svg viewBox="0 0 600 150" width="100%" role="img" aria-label="Illustration of students queuing at a hostel mess; the queue size changes with the day type"><rect x="440" y="30" width="140" height="100" rx="8" fill="#f97316" opacity=".25" stroke="#f97316"/><text x="510" y="60" text-anchor="middle">🍲 Mess</text><text x="510" y="85" text-anchor="middle" id="sq"></text><text x="510" y="110" text-anchor="middle" id="sk2"></text><g id="st"></g><text x="10" y="20" id="sw"></text></svg><div class="mu" style="font-size:.85rem">Illustrative: each dot is about 20 students. Real demand comes from the model and logs.</div></div>
+<h3 style="margin-top:1.6rem">How to run</h3><div id="run"></div></div>
+<div class="dsec"><div class="k">4 · Results</div><h2>Key features, insights &amp; results</h2><div class="g2"><div class="card"><div class="stat">86.2%</div>less food waste vs traditional (simulated)</div><div class="card"><div class="stat">3.4%</div>average waste (21.8% traditional)</div><div class="card"><div class="stat">1.85 kg</div>MAE (8.45 kg traditional)</div></div><h3 style="margin-top:1.6rem">Benchmarks</h3>
+<div class="note"><b>Simulated results.</b> These figures come from the project’s simulated/synthetic dataset and benchmark, not independently validated real-world operations.</div>
+<div class="wrap card"><table><thead><tr><th>Metric</th><th>Traditional Cook</th><th>Linear Model</th><th>Annapurna AI</th></tr></thead><tbody>
+<tr><td>MAE</td><td>8.45 kg</td><td>2.65 kg</td><td>1.85 kg</td></tr>
+<tr><td>Average food waste</td><td>21.8%</td><td>6.8%</td><td>3.4%</td></tr>
+<tr><td>Annual savings</td><td>₹0</td><td>₹49.2 Lakhs</td><td>₹62.4 Lakhs</td></tr>
+<tr><td>Stockout rate</td><td>1.4%</td><td>0.4%</td><td>0.3%</td></tr>
+<tr><td>CO2e prevented</td><td>0 Tons</td><td>142 Tons</td><td>185.3 Tons</td></tr></tbody></table></div>
+<div class="g2" style="margin-top:1rem"><div class="card"><canvas id="c1" height="200" aria-label="Chart of waste rate and MAE by method" role="img"></canvas></div>
+<div class="card"><div class="stat">86.2%</div>reduction in food waste vs the traditional baseline (simulated), with lower error, fewer stockouts, and modelled savings and emissions reduction.</div></div>
+
+<h3 style="margin-top:1.6rem">Dashboard capabilities</h3>
+<div class="tabs" id="dt" role="group" aria-label="Dashboard features"></div><div class="card" id="dx"></div>
+
+<h3 style="margin-top:1.6rem">Interactive demonstration</h3>
+<div class="note"><b>Illustrative only.</b> The trained model files were not supplied to this portfolio, so this uses simple placeholder assumptions to show the idea. It is not the actual Annapurna AI model.</div>
+<div class="g2"><div class="card">
+<label for="ml">Meal</label><select id="ml"><option value="1">Breakfast</option><option value="1.5" selected>Lunch</option><option value="0.8">Snacks</option><option value="1.6">Dinner</option></select>
+<label for="wx">Weather</label><select id="wx"><option value="1">Clear</option><option value="1.04">Rain (more stay in)</option></select>
+<label for="ev">Context</label><select id="ev"><option value="1">Normal day</option><option value="1.05">Exam period</option><option value="0.75">Festival departures</option></select>
+<label for="at">Expected attendance: <b id="atv">400</b></label><input id="at" type="range" min="100" max="500" value="400">
+<label for="qq">Safety quantile: <b id="qv">85</b>%</label><input id="qq" type="range" min="70" max="95" value="85"></div>
+<div class="card" id="out"></div></div>
+
+</div>
+<div class="dsec"><div class="k">5 · Conclusion</div><h2>Conclusion &amp; business impact</h2><div class="sec"><h4>Conclusion</h4><p>Annapurna AI treats mess cooking as a stochastic inventory (newsvendor) problem: shortage and surplus cost different amounts, so the best quantity is a quantile of predicted demand, not its mean.</p></div><div class="sec"><h4>Business impact</h4><ul class="tl2"><li>On the simulated benchmark it cut average waste from 21.8% to 3.4%, with fewer stockouts (0.3% vs 1.4%).</li><li>It models annual savings of ₹62.4 Lakhs and 185.3 tons of CO2e prevented.</li><li>The weigh-and-log routine takes about 30 seconds and feeds tomorrow’s plan.</li></ul></div><div class="note"><b>Simulated results.</b> All figures come from the project’s synthetic dataset and benchmark, not from independently validated real-world operations. The live counter and the interactive demo are explanations, not real kitchen data.</div></div>
+<div class="row" style="margin-top:1.5rem"><a class="btn" href="https://github.com/archanapujahari26" target="_blank" rel="noopener">View on GitHub</a><a class="btn o" href="index.html#projects">← Back to Projects</a></div><div class="pn2"><a href="project-5.html">← Stock Market Analyzer</a><a href="project-2.html">House Price Prediction →</a></div></main>
+<footer>© Archana Pujahari</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script><script>const $=s=>document.querySelector(s);
+// stages
+const st=[['Context','Inputs: day of week, rain and temperature, exam schedule, festivals and holidays.'],['Attendance','Predicts the expected number of students for a meal.'],['Dish intake','Estimates per-person consumption for each dish.'],['Quantile buffer','Asymmetric buffer balancing shortage risk against excess cooking; adjustable from 70% to 95%.'],['Prep sheet','Recommended quantities, exact batch weights, ingredient procurement and safety-buffer guidance.'],['Feedback','Records prepared food, consumption and leftovers to support future analysis.']];
+const sg=document.querySelector('.stg');st.forEach((s,i)=>{const b=document.createElement('button');b.textContent=(i+1)+'. '+s[0];b.setAttribute('aria-pressed',i==3?'true':'false');b.onclick=()=>{sg.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#stx').innerHTML='<b>Stage '+(i+1)+' — '+s[0]+'</b><br>'+s[1]};sg.append(b);if(i<5){const a=document.createElement('span');a.textContent='→';sg.append(a)}});$('#stx').innerHTML='<b>Stage 4 — '+st[3][0]+'</b><br>'+st[3][1];
+// chart
+if(typeof Chart!=='undefined')new Chart($('#c1'),{type:'bar',data:{labels:['Traditional','Linear','Annapurna AI'],datasets:[{label:'Food waste %',data:[21.8,6.8,3.4],backgroundColor:'#3b82f6'},{label:'MAE (kg)',data:[8.45,2.65,1.85],backgroundColor:'#22d3ee'}]},options:{plugins:{title:{display:true,text:'Simulated benchmark'}}}});
+// dashboard features
+const df={'Daily Prep Planner':'Pick date, meal, weather and exam/festival status, adjust the safety buffer, then get recommended quantities and ingredient procurement lists.','30-Second Logger':'Enter pot weight before and after service. It computes consumed and leftover food, estimates savings and exports the updated CSV.','Analytics':'Cumulative waste reduction, loss by dish category, day-of-week attendance patterns, exam-season comparisons and food category analysis.','What-if Sandbox':'Simulate sudden rain, exam periods and weekend departures; adjust attendance and see the trade-off between shortage risk and waste cost.','Kitchen Print Sheet':'Printable instructions for head cooks with quantities, ingredient needs and the safety buffer.'};
+Object.keys(df).forEach((k,i)=>{const b=document.createElement('button');b.textContent=k;b.setAttribute('aria-pressed',i==0);b.onclick=()=>{document.querySelectorAll('#dt button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#dx').innerHTML='<b>'+k+'</b><p style="margin:.4rem 0 0">'+df[k]+'</p>'};$('#dt').append(b)});$('#dx').innerHTML='<b>Daily Prep Planner</b><p style="margin:.4rem 0 0">'+df['Daily Prep Planner']+'</p>';
+// demo (illustrative)
+function zq(p){p/=100;const a=[2.50662823884,-18.61500062529,41.39119773534,-25.44106049637],b=[-8.4735109309,23.08336743743,-21.06224101826,3.13082909833],c=[.3374754822726147,.9761690190917186,.1607979714918209,.0276438810333863,.0038405729373609,.0003951896511919,.0000321767881768,.0000002888167364,.0000003960315187],y=p-.5;if(Math.abs(y)<.42){const r=y*y;return y*(((a[3]*r+a[2])*r+a[1])*r+a[0])/((((b[3]*r+b[2])*r+b[1])*r+b[0])*r+1)}let r=Math.log(-Math.log(1-p));let x=c[0];let pw=r;for(let i=1;i<9;i++){x+=c[i]*pw;pw*=r}return x}
+function demo(){const n=+$('#at').value,q=+$('#qq').value;$('#atv').textContent=n;$('#qv').textContent=q;const m=+$('#ml').value,f=+$('#wx').value*+$('#ev').value;const nh=n*f>n?n*(f>1?Math.min(f,1.1):f):n*f,c=0.35*m,sg=0.06*nh*c,z=zq(q),Qs=nh*c+z*sg,trad=n*c*1.22,sv=(trad-Qs)/trad*100;
+$('#out').innerHTML=`<div class="k">Illustrative output</div><p>Expected headcount (N_hat): <b>${nh.toFixed(0)}</b><br>Assumed serving (c_hat): <b>${c.toFixed(2)} kg</b> per student<br>z at ${q}%: <b>${z.toFixed(2)}</b></p><label>Traditional (+22% thumb rule)</label><div class="bar" style="width:100%">${trad.toFixed(0)} kg</div><label>Quantile recommendation Q*</label><div class="bar" style="width:${Math.max(8,Qs/trad*100)}%;background:var(--cy);color:#04121f">${Qs.toFixed(0)} kg</div><p class="mu" style="margin-top:.8rem">Estimated reduction vs the rule of thumb: <b>${sv.toFixed(1)}%</b> (illustrative)</p>`}
+['ml','wx','ev','at','qq'].forEach(i=>$('#'+i).oninput=demo);demo();
+// tree
+const T={'data/':['mess_daily_logs.csv','recipes_and_costs.csv','academic_calendar.csv','data_dictionary.md'],'src/':['data_generator.js','data_generator.py','feature_engineering.py','model_engine.py','cost_optimizer.py','train_and_export.js'],'notebooks/':['mess_waste_optimizer_eda_and_models.ipynb'],'dashboard/':['index.html','styles.css','app.js','model_data.js','server.js'],'docs/':['data_collection_playbook.md','data_science_methodology.md']};
+$('#tree').innerHTML=Object.entries(T).map(([k,v])=>`<details><summary>${k}</summary><ul>${v.map(x=>'<li><code>'+x+'</code></li>').join('')}</ul></details>`).join('')+'<p class="mu"><code>README.md</code> at project root.</p>';
+// run
+const R=[['Start the dashboard (then open http://localhost:3000)','cd mess-waste-optimizer/dashboard\nnode server.js'],['Generate synthetic data','node src/data_generator.js'],['Retrain models','node src/train_and_export.js'],['Run the notebook','jupyter notebook notebooks/mess_waste_optimizer_eda_and_models.ipynb'],['Run Python modules','python3 src/data_generator.py\npython3 src/feature_engineering.py']];
+$('#run').innerHTML=R.map(([t,c],i)=>`<div class="mu">${t}</div><pre id="p${i}">${c}</pre><button class="btn o" data-c="${i}" style="padding:.25rem .7rem;font-size:.8rem">Copy</button>`).join('');
+document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{const t=$('#p'+b.dataset.c).textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>b.textContent='Copied ✓').catch(()=>{const r=document.createRange();r.selectNodeContents($('#p'+b.dataset.c));getSelection().removeAllRanges();getSelection().addRange(r);b.textContent='Selected — press Ctrl+C'});setTimeout(()=>b.textContent='Copy',2000)});
+// pots
+const pd=[['Traditional',21.8,'#f97316','Traditional rule of thumb: about 21.8% of cooked food wasted (simulated).'],['Annapurna AI',3.4,'#22d3ee','Annapurna AI: about 3.4% wasted, an 86.2% cut (simulated benchmark).']];
+const pg=document.querySelector('#pots');pg.innerHTML=pd.map((p,i)=>`<g tabindex="0" data-p="${i}" style="cursor:pointer"><rect x="${20+i*140}" y="20" width="120" height="100" rx="12" fill="none" stroke="${p[2]}" stroke-width="3"/><rect class="pot" x="${24+i*140}" y="116" width="112" height="0" fill="${p[2]}" opacity=".8"/><text x="${80+i*140}" y="68" text-anchor="middle">${p[0]}</text><text x="${80+i*140}" y="140" text-anchor="middle">${p[1]}% waste</text></g>`).join('');
+setTimeout(()=>pg.querySelectorAll('g').forEach((g,i)=>{const r=g.querySelector('.pot'),h=pd[i][1]*3.2;r.setAttribute('height',h);r.setAttribute('y',116-h)}),300);
+pg.querySelectorAll('g').forEach((g,i)=>{const f=()=>document.querySelector('#pt').textContent=pd[i][3];g.onmouseenter=f;g.onfocus=f;g.onclick=f});
+// stage + project + skill colours
+const SC=['#2563eb','#7c3aed','#db2777','#ea580c','#059669','#0891b2'];document.querySelectorAll('.stg button').forEach((b,i)=>b.style.setProperty('--sc',SC[i]));
+// mess scene
+const DS=[['Normal day',20,'Typical attendance',''],['Exam week',24,'More students eat in','📚'],['Rainy day',22,'Fewer order outside','🌧️'],['Festival',8,'Many go home','🎉']];
+function scn(i){const d=DS[i];document.querySelectorAll('#sc button').forEach((b,j)=>b.setAttribute('aria-pressed',j==i));document.querySelector('#st').innerHTML=Array.from({length:d[1]},(_,k)=>`<g><circle cx="${20+(k%12)*34}" cy="${60+Math.floor(k/12)*34}" r="11" fill="hsl(${190+k*9},80%,60%)"/><rect x="${14+(k%12)*34}" y="${74+Math.floor(k/12)*34}" width="12" height="6" rx="3" fill="hsl(${190+k*9},80%,45%)"/></g>`).join('');document.querySelector('#sq').textContent='~'+d[1]*20+' students';document.querySelector('#sk2').textContent=d[2];document.querySelector('#sw').textContent=d[3]+' '+d[0]}
+DS.forEach((d,i)=>{const b=document.createElement('button');b.textContent=d[0];b.onclick=()=>scn(i);document.querySelector('#sc').append(b)});scn(0);
+// live simulated counter
+let lm=0,lk=0;const sc=[12.4,18.6,9.8,22.1,15.3];setInterval(()=>{lm++;lk+=.3+Math.random()*.4;document.querySelector('#lm').textContent=lm;document.querySelector('#lk').textContent=lk.toFixed(1);document.querySelector('#lr').textContent='₹'+Math.round(lk*40);document.querySelector('#scl').textContent=sc[lm%sc.length].toFixed(1)+' kg'},1200);
+
+function tick(){const d=new Date(),h=d.getHours(),m=h<10?'Breakfast':h<15?'Lunch':h<18?'Snacks':'Dinner';const e=document.querySelector('#clk');if(e)e.textContent='LIVE '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit',second:'2-digit'})+' · '+m}tick();setInterval(tick,1000);</script></body></html>
